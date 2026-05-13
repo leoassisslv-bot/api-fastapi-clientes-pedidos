@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Manager</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Beauty Manager</h1>
+        <p>Sistema de Gestão para Salão de Beleza</p>
+       <div class="dashboard">
+    <div class="dash-card">
+        <h3>Total de Clientes</h3>
+        <span id="totalClientes">0</span>
+    </div>
+
+    <div class="dash-card">
+        <h3>Total de Serviços</h3>
+        <span id="totalServicos">0</span>
+    </div>
+
+    <div class="dash-card">
+        <h3>Faturamento</h3>
+        <span id="faturamentoTotal">R$ 0</span>
+    </div>
+</div>
+
+        <div class="card">
+
+            <h2>Cadastrar Cliente</h2>
+
+            <form id="formCliente">
+
+                <input type="text" id="nome" placeholder="Nome do cliente">
+
+                <input type="email" id="email" placeholder="Email do cliente">
+
+                <input type="text" id="idade" placeholder="Idade">
+
+                <button type="submit">
+                    Cadastrar
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Clientes Cadastrados</h2>
+
+            <ul id="listaClientes">
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+    <h2>Cadastrar Serviço</h2>
+
+    <form id="formPedido">
+
+        <input type="number" id="cliente_id" placeholder="ID do cliente">
+
+        <input type="text" id="produto" placeholder="Serviço realizado">
+
+        <input type="number" id="valor" placeholder="Valor do serviço">
+
+        <button type="submit">
+            Salvar Serviço
+        </button>
+
+    </form>
+
+</div>
+
+<div class="card">
+
+    <h2>Serviços Realizados</h2>
+
+    <ul id="listaPedidos"></ul>
+
+</div>
+
+    <script src="/static/js/clientes.js"></script>
+
+</body>
+</html>

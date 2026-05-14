@@ -5,27 +5,67 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+    background: #f8fafc;
     color: #1e293b;
 }
 
-.container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 40px auto;
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background: #111827;
+    color: white;
+    padding: 30px 22px;
+    position: fixed;
+    height: 100vh;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+}
+
+.sidebar a:hover {
+    background: #1e293b;
+    color: white;
+}
+
+.content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    padding: 40px;
+}
+
+.topbar {
+    margin-bottom: 30px;
 }
 
 h1 {
-    text-align: center;
-    font-size: 52px;
-    margin-bottom: 10px;
+    font-size: 42px;
+    margin: 0 0 8px;
     color: #111827;
 }
 
 p {
-    text-align: center;
     color: #64748b;
-    margin-bottom: 40px;
+    margin: 0;
     font-size: 18px;
 }
 
@@ -36,19 +76,22 @@ p {
     margin-bottom: 30px;
 }
 
-.dash-card {
-    background: #ffffff;
-    padding: 24px;
+.dash-card,
+.card {
+    background: white;
     border-radius: 22px;
-    text-align: center;
     border: 1px solid #e2e8f0;
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.dash-card {
+    padding: 24px;
 }
 
 .dash-card h3 {
     color: #64748b;
     margin: 0 0 10px;
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .dash-card span {
@@ -57,19 +100,21 @@ p {
     color: #4f46e5;
 }
 
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
 .card {
-    background: #ffffff;
-    padding: 32px;
-    margin-bottom: 30px;
-    border-radius: 24px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+    padding: 28px;
 }
 
 h2 {
     color: #111827;
     margin-top: 0;
-    font-size: 28px;
+    font-size: 24px;
 }
 
 form {
@@ -79,7 +124,7 @@ form {
 }
 
 input {
-    padding: 16px;
+    padding: 15px;
     border: 1px solid #cbd5e1;
     border-radius: 14px;
     font-size: 16px;
@@ -90,12 +135,12 @@ input {
 
 input:focus {
     border-color: #6366f1;
-    background: #ffffff;
+    background: white;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 button {
-    padding: 16px;
+    padding: 15px;
     background: linear-gradient(135deg, #7c3aed, #2563eb);
     color: white;
     border: none;
@@ -103,7 +148,6 @@ button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 button:hover {
@@ -114,15 +158,15 @@ button:hover {
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 li {
     background: #f8fafc;
-    padding: 16px;
+    padding: 14px;
     margin-bottom: 12px;
     border-radius: 14px;
     border-left: 5px solid #6366f1;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -131,7 +175,7 @@ li {
 
 .btn-excluir {
     background: #ef4444;
-    padding: 10px 14px;
+    padding: 9px 13px;
     border-radius: 10px;
     font-size: 14px;
 }
@@ -140,17 +184,26 @@ li {
     background: #dc2626;
 }
 
-@media (max-width: 700px) {
-    .dashboard {
-        grid-template-columns: 1fr;
+@media (max-width: 900px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
     }
 
-    h1 {
-        font-size: 38px;
+    .app-layout {
+        flex-direction: column;
     }
 
-    .card {
+    .content {
+        margin-left: 0;
+        width: 100%;
         padding: 24px;
+    }
+
+    .dashboard,
+    .grid {
+        grid-template-columns: 1fr;
     }
 
     li {

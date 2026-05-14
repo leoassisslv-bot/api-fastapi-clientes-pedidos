@@ -1,37 +1,37 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #fff1f7, #f7ddec);
-    color: #333;
+    background: #0f172a;
+    color: #f8fafc;
 }
 
 .container {
     width: 90%;
-    max-width: 900px;
+    max-width: 1100px;
     margin: 40px auto;
 }
 
 h1 {
     text-align: center;
-    color: #8a2c5d;
-    font-size: 42px;
-    margin-bottom: 8px;
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #ffffff;
 }
 
 p {
     text-align: center;
-    color: #7a5c6b;
-    margin-bottom: 35px;
+    color: #94a3b8;
+    margin-bottom: 40px;
     font-size: 18px;
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.95);
+    background: #111827;
     padding: 30px;
     margin-bottom: 28px;
     border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(138, 44, 93, 0.12);
-    border: 1px solid #f3cfe0;
+    border: 1px solid #1e293b;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
 h2 {
@@ -62,11 +62,11 @@ input:focus {
 
 button {
     padding: 15px;
-    background: linear-gradient(135deg, #8a2c5d, #b04479);
+    background: linear-gradient(135deg, #7c3aed, #2563eb);
     color: white;
     border: none;
     border-radius: 12px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
@@ -74,7 +74,7 @@ button {
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(138, 44, 93, 0.25);
+    opacity: 0.95;
 }
 
 ul {

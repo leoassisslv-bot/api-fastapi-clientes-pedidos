@@ -35,9 +35,7 @@ p {
 }
 
 h2 {
-    color: #8a2c5d;
-    margin-top: 0;
-    font-size: 26px;
+    color: #f8fafc;
 }
 
 form {
@@ -48,15 +46,16 @@ form {
 
 input {
     padding: 15px;
-    border: 1px solid #e6c3d3;
+    border: 1px solid #334155;
     border-radius: 12px;
     font-size: 16px;
     outline: none;
-    background: #fffafd;
+    background: #0f172a;
+    color: white;
 }
 
 input:focus {
-    border-color: #8a2c5d;
+    border-color: #7c3aed;
     box-shadow: 0 0 0 3px rgba(138, 44, 93, 0.12);
 }
 
@@ -83,12 +82,12 @@ ul {
 }
 
 li {
-    background: #fff1f7;
+    background: #0f172a;
     padding: 15px;
     margin-bottom: 12px;
     border-radius: 12px;
-    border-left: 5px solid #8a2c5d;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    border-left: 5px solid #7c3aed;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 }
 
 li {
@@ -117,16 +116,16 @@ li {
 }
 
 .dash-card {
-    background: white;
+    background: #111827;
     padding: 22px;
     border-radius: 18px;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(138, 44, 93, 0.12);
-    border: 1px solid #f3cfe0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    border: 1px solid #1e293b;
 }
 
 .dash-card h3 {
-    color: #8a2c5d;
+    color: #94a3b8;
     margin: 0 0 10px;
     font-size: 18px;
 }
@@ -134,7 +133,7 @@ li {
 .dash-card span {
     font-size: 28px;
     font-weight: bold;
-    color: #333;
+    color: white;
 }
 
 @media (max-width: 700px) {

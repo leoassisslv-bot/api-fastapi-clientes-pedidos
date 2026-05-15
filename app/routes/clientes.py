@@ -8,7 +8,7 @@ router = APIRouter()
 class ClienteCreate(BaseModel):
     nome: str
     email: str
-    idade: int
+    telefone: str
 
 
 @router.get("/clientes")
@@ -16,7 +16,7 @@ def listar_clientes():
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT id, nome, email, idade, criado_em
+                SELECT id, nome, email, telefone, criado_em
                 FROM clientes
                 ORDER BY id
             """)
@@ -29,7 +29,7 @@ def listar_clientes():
             "id": linha[0],
             "nome": linha[1],
             "email": linha[2],
-            "idade": linha[3],
+            "telefone": linha[3],
             "criado_em": str(linha[4]),
         })
 
@@ -41,7 +41,7 @@ def buscar_cliente_por_id(cliente_id: int):
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT id, nome, email, idade, criado_em
+                SELECT id, nome, email, telefone, criado_em
                 FROM clientes
                 WHERE id = %s
             """, (cliente_id,))
@@ -54,7 +54,7 @@ def buscar_cliente_por_id(cliente_id: int):
         "id": cliente[0],
         "nome": cliente[1],
         "email": cliente[2],
-        "idade": cliente[3],
+        "telefone": cliente[3],
         "criado_em": str(cliente[4]),
     }
 
@@ -65,10 +65,10 @@ def criar_cliente(cliente: ClienteCreate):
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                    INSERT INTO clientes (nome, email, idade)
+                    INSERT INTO clientes (nome, email, telefone)
                     VALUES (%s, %s, %s)
-                    RETURNING id, nome, email, idade, criado_em
-                """, (cliente.nome, cliente.email, cliente.idade))
+                    RETURNING id, nome, email, telefone, criado_em
+                """, (cliente.nome, cliente.email, cliente.telefone))
 
                 novo_cliente = cur.fetchone()
                 conn.commit()
@@ -77,7 +77,7 @@ def criar_cliente(cliente: ClienteCreate):
             "id": novo_cliente[0],
             "nome": novo_cliente[1],
             "email": novo_cliente[2],
-            "idade": novo_cliente[3],
+            "telefone": novo_cliente[3],
             "criado_em": str(novo_cliente[4]),
         }
 
@@ -97,10 +97,10 @@ def atualizar_cliente(cliente_id: int, cliente: ClienteCreate):
 
             cur.execute("""
                 UPDATE clientes
-                SET nome = %s, email = %s, idade = %s
+                SET nome = %s, email = %s, telefone = %s
                 WHERE id = %s
-                RETURNING id, nome, email, idade, criado_em
-            """, (cliente.nome, cliente.email, cliente.idade, cliente_id))
+                RETURNING id, nome, email, telefone, criado_em
+            """, (cliente.nome, cliente.email, cliente.telefone, cliente_id))
 
             cliente_atualizado = cur.fetchone()
             conn.commit()
@@ -109,7 +109,7 @@ def atualizar_cliente(cliente_id: int, cliente: ClienteCreate):
         "id": cliente_atualizado[0],
         "nome": cliente_atualizado[1],
         "email": cliente_atualizado[2],
-        "idade": cliente_atualizado[3],
+        "telefone": cliente_atualizado[3],
         "criado_em": str(cliente_atualizado[4]),
     }
 

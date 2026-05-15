@@ -21,7 +21,7 @@ def criar_tabelas():
                     id SERIAL PRIMARY KEY,
                     nome VARCHAR(100),
                     email VARCHAR(100),
-                    idade INTEGER,
+                    telefone INTEGER,
                     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
@@ -35,5 +35,10 @@ def criar_tabelas():
                     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+
+            cur.execute("""
+    ALTER TABLE clientes
+    ADD COLUMN IF NOT EXISTS telefone VARCHAR(20)
+""")
 
             conn.commit()

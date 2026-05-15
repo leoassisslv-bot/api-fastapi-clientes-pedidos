@@ -15,7 +15,7 @@ async function carregarClientes() {
         const item = document.createElement("li");
 
         item.innerHTML = `
-            <span>${cliente.id} - ${cliente.nome} - ${cliente.email} - ${cliente.idade} anos</span>
+            <span>${cliente.id} - ${cliente.nome} - ${cliente.email} - ${cliente.telefone}</span>
             <button class="btn-excluir" onclick="excluirCliente(${cliente.id})">Excluir</button>
         `;
 
@@ -36,12 +36,12 @@ formCliente.addEventListener("submit", async function(event) {
 
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
-    const idade = document.getElementById("idade").value;
+    const telefone = document.getElementById("telefone").value;
 
     const cliente = {
         nome: nome,
         email: email,
-        idade: Number(idade)
+        telefone: telefone
     };
 
     await fetch("/clientes", {

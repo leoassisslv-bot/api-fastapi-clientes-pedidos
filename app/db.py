@@ -75,6 +75,18 @@ def criar_tabelas():
                 )
             """)
 
+            # Adiciona coluna profissional caso não exista
+        cur.execute("""
+                    ALTER TABLE pedidos
+                   ADD COLUMN IF NOT EXISTS profissional VARCHAR(100)
+             """)
+
+              # Adiciona coluna data_servico caso não exista
+        cur.execute("""
+                     ALTER TABLE pedidos
+                   ADD COLUMN IF NOT EXISTS data_servico TIMESTAMP
+           """)
+
             # =========================
             # GARANTE NOVAS COLUNAS
             # MESMO EM BANCOS ANTIGOS

@@ -2,17 +2,25 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Garante que o sistema se adapte melhor em telas menores -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>NextStudio</title>
+
+    <!-- Arquivo principal de estilos do painel -->
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
+    <!-- Layout principal do sistema: sidebar + conteúdo -->
     <div class="app-layout">
 
+        <!-- Menu lateral de navegação -->
         <aside class="sidebar">
             <div class="logo">NextStudio</div>
 
+            <!-- Links com âncoras para navegar pelas seções da página -->
             <nav>
                 <a href="#dashboard">Dashboard</a>
                 <a href="#clientes">Clientes</a>
@@ -21,8 +29,10 @@
             </nav>
         </aside>
 
+        <!-- Área principal do painel -->
         <main class="content">
 
+            <!-- Cabeçalho do sistema -->
             <header class="topbar">
                 <div>
                     <h1>NextStudio</h1>
@@ -30,6 +40,7 @@
                 </div>
             </header>
 
+            <!-- Indicadores principais do dashboard -->
             <section class="dashboard" id="dashboard">
                 <div class="dash-card">
                     <h3>Total de Clientes</h3>
@@ -47,8 +58,10 @@
                 </div>
             </section>
 
+            <!-- Área de cadastro de clientes e serviços -->
             <section class="grid" id="clientes">
 
+                <!-- Formulário para cadastrar novos clientes -->
                 <div class="card">
                     <h2>Cadastrar Cliente</h2>
 
@@ -61,21 +74,22 @@
                     </form>
                 </div>
 
+                <!-- Formulário para cadastrar serviços vinculados a um cliente -->
                 <div class="card">
                     <h2>Cadastrar Serviço</h2>
 
                     <form id="formServico">
 
+                        <!-- Select preenchido automaticamente pelo JavaScript -->
                         <select id="cliente_id" required>
                             <option value="">Selecione o cliente</option>
                         </select>
 
                         <input type="text" id="produto" placeholder="Serviço realizado" required>
-
                         <input type="number" id="valor" placeholder="Valor do serviço" required>
-
                         <input type="text" id="profissional" placeholder="Profissional responsável">
 
+                        <!-- Campo usado para alimentar a agenda -->
                         <input type="datetime-local" id="data_servico">
 
                         <button type="submit">Salvar Serviço</button>
@@ -85,24 +99,32 @@
 
             </section>
 
+            <!-- Listagem de clientes e serviços já cadastrados -->
             <section class="grid" id="servicos">
 
                 <div class="card">
                     <h2>Clientes Cadastrados</h2>
+
+                    <!-- Lista preenchida via JavaScript -->
                     <ul id="listaClientes"></ul>
                 </div>
 
                 <div class="card">
                     <h2>Serviços Realizados</h2>
+
+                    <!-- Lista preenchida via JavaScript -->
                     <ul id="listaServicos"></ul>
                 </div>
 
             </section>
 
+            <!-- Agenda simples baseada nos serviços cadastrados com data -->
             <section class="grid" id="agenda">
 
                 <div class="card agenda-card">
                     <h2>Agenda</h2>
+
+                    <!-- Agenda preenchida via JavaScript -->
                     <ul id="listaAgenda"></ul>
                 </div>
 
@@ -112,6 +134,7 @@
 
     </div>
 
+    <!-- Arquivo responsável pela comunicação com a API e atualização da tela -->
     <script src="/static/js/clientes.js"></script>
 
 </body>

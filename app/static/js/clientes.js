@@ -1,11 +1,23 @@
 console.log("JavaScript carregado com sucesso!");
 
+// =========================
+// ELEMENTOS DO HTML
+// =========================
+// Captura os formulários e listas que serão manipulados pelo JavaScript.
+
 const formCliente = document.getElementById("formCliente");
 const listaClientes = document.getElementById("listaClientes");
 
 const formServico = document.getElementById("formServico");
 const listaServicos = document.getElementById("listaServicos");
 const listaAgenda = document.getElementById("listaAgenda");
+
+
+// =========================
+// CARREGAR CLIENTES
+// =========================
+// Busca os clientes na API e atualiza a lista na tela.
+// Também preenche o select de clientes no cadastro de serviços.
 
 async function carregarClientes() {
 
@@ -55,6 +67,12 @@ async function carregarClientes() {
     });
 }
 
+
+// =========================
+// EXCLUIR CLIENTE
+// =========================
+// Remove o cliente do banco e recarrega os dados da tela.
+
 async function excluirCliente(id) {
 
     await fetch(`/clientes/${id}`, {
@@ -64,6 +82,12 @@ async function excluirCliente(id) {
     carregarClientes();
     carregarServicos();
 }
+
+
+// =========================
+// CADASTRAR CLIENTE
+// =========================
+// Envia os dados do formulário para a API.
 
 formCliente.addEventListener("submit", async (event) => {
 
@@ -88,12 +112,18 @@ formCliente.addEventListener("submit", async (event) => {
     carregarClientes();
 });
 
+
+// =========================
+// CARREGAR SERVIÇOS E AGENDA
+// =========================
+// Busca os serviços na API, atualiza a lista,
+// recalcula o faturamento e monta a agenda.
+
 async function carregarServicos() {
 
     try {
 
         const resposta = await fetch("/pedidos");
-
         const servicos = await resposta.json();
 
         listaServicos.innerHTML = "";
@@ -115,6 +145,7 @@ async function carregarServicos() {
 
             const item = document.createElement("li");
 
+            // Formata a data recebida do backend para o padrão brasileiro.
             const dataFormatada = servico.data_servico
                 ? new Date(servico.data_servico).toLocaleString("pt-BR")
                 : "Não informada";
@@ -142,6 +173,7 @@ async function carregarServicos() {
 
             listaServicos.appendChild(item);
 
+            // A agenda usa os mesmos serviços, mas exibe apenas os que possuem data.
             if (listaAgenda && servico.data_servico) {
 
                 const itemAgenda = document.createElement("li");
@@ -167,6 +199,12 @@ async function carregarServicos() {
         console.error("Erro ao carregar serviços:", erro);
     }
 }
+
+
+// =========================
+// CADASTRAR SERVIÇO
+// =========================
+// Envia o serviço para a API FastAPI.
 
 formServico.addEventListener("submit", async (event) => {
 
@@ -200,6 +238,7 @@ formServico.addEventListener("submit", async (event) => {
             body: JSON.stringify(servico)
         });
 
+        // Se a API retornar erro, mostra alerta e interrompe o cadastro.
         if (!resposta.ok) {
 
             const erro = await resposta.text();
@@ -223,6 +262,12 @@ formServico.addEventListener("submit", async (event) => {
     }
 });
 
+
+// =========================
+// EXCLUIR SERVIÇO
+// =========================
+// Remove o serviço e atualiza a lista e agenda.
+
 async function excluirServico(id) {
 
     await fetch(`/pedidos/${id}`, {
@@ -231,6 +276,12 @@ async function excluirServico(id) {
 
     carregarServicos();
 }
+
+
+// =========================
+// INICIALIZAÇÃO DO SISTEMA
+// =========================
+// Carrega os dados automaticamente ao abrir o painel.
 
 carregarClientes();
 carregarServicos();

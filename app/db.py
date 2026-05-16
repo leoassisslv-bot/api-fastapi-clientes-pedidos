@@ -94,29 +94,29 @@ def criar_tabelas():
 
             # CLIENTES
 
-            cur.execute("""
+        cur.execute("""
                 ALTER TABLE clientes
                 ADD COLUMN IF NOT EXISTS telefone VARCHAR(30)
             """)
 
             # PEDIDOS
 
-            cur.execute("""
+        cur.execute("""
                 ALTER TABLE pedidos
                 ADD COLUMN IF NOT EXISTS profissional VARCHAR(100)
             """)
 
-            cur.execute("""
+        cur.execute("""
                 ALTER TABLE pedidos
                 ADD COLUMN IF NOT EXISTS data_servico TIMESTAMP
             """)
 
-            cur.execute("""
+        cur.execute("""
                 ALTER TABLE pedidos
                 ADD COLUMN IF NOT EXISTS criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             """)
 
             # Salva alterações
-            conn.commit()
+    conn.commit()
 
     print("Banco atualizado com sucesso!")

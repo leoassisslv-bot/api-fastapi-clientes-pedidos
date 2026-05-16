@@ -2,10 +2,22 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.db import get_connection
 
+
+# =========================
+# CONFIGURAÇÃO DAS ROTAS
+# =========================
+
 router = APIRouter()
 
 
+# =========================
+# MODELO DE SERVIÇO
+# =========================
+# Apesar do arquivo ainda se chamar pedidos.py,
+# aqui ele representa os serviços cadastrados no sistema.
+
 class PedidoCreate(BaseModel):
+
     cliente_id: int
     produto: str
     valor: float
@@ -13,15 +25,32 @@ class PedidoCreate(BaseModel):
     data_servico: str
 
 
+# =========================
+# CRIAR SERVIÇO
+# =========================
+# Cadastra um serviço vinculado a um cliente existente.
+
 @router.post("/pedidos")
 def criar_pedido(pedido: PedidoCreate):
+
     with get_connection() as conn:
+
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM clientes WHERE id = %s", (pedido.cliente_id,))
+
+            # Verifica se o cliente existe antes de cadastrar o serviço.
+            cur.execute(
+                "SELECT id FROM clientes WHERE id = %s",
+                (pedido.cliente_id,)
+            )
+
             cliente = cur.fetchone()
 
             if not cliente:
-                raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+                raise HTTPException(
+                    status_code=404,
+                    detail="Cliente não encontrado"
+                )
 
             cur.execute("""
                 INSERT INTO pedidos (
@@ -31,8 +60,17 @@ def criar_pedido(pedido: PedidoCreate):
                     profissional,
                     data_servico
                 )
+
                 VALUES (%s, %s, %s, %s, %s)
-                RETURNING id, cliente_id, produto, valor, profissional, data_servico, criado_em
+
+                RETURNING
+                    id,
+                    cliente_id,
+                    produto,
+                    valor,
+                    profissional,
+                    data_servico,
+                    criado_em
             """, (
                 pedido.cliente_id,
                 pedido.produto,
@@ -42,6 +80,7 @@ def criar_pedido(pedido: PedidoCreate):
             ))
 
             novo = cur.fetchone()
+
             conn.commit()
 
     return {
@@ -55,10 +94,19 @@ def criar_pedido(pedido: PedidoCreate):
     }
 
 
+# =========================
+# LISTAR SERVIÇOS
+# =========================
+# Retorna todos os serviços com o nome do cliente.
+# Essa rota alimenta a lista de serviços e a agenda no frontend.
+
 @router.get("/pedidos")
 def listar_pedidos():
+
     with get_connection() as conn:
+
         with conn.cursor() as cur:
+
             cur.execute("""
                 SELECT
                     pedidos.id,
@@ -68,15 +116,21 @@ def listar_pedidos():
                     pedidos.profissional,
                     pedidos.data_servico,
                     pedidos.criado_em
+
                 FROM pedidos
-                JOIN clientes ON pedidos.cliente_id = clientes.id
+
+                JOIN clientes
+                    ON pedidos.cliente_id = clientes.id
+
                 ORDER BY pedidos.id
             """)
+
             dados = cur.fetchall()
 
     pedidos = []
 
     for linha in dados:
+
         pedidos.append({
             "id": linha[0],
             "cliente": linha[1],
@@ -90,15 +144,32 @@ def listar_pedidos():
     return pedidos
 
 
+# =========================
+# LISTAR SERVIÇOS DE UM CLIENTE
+# =========================
+# Retorna apenas os serviços vinculados a um cliente específico.
+
 @router.get("/clientes/{cliente_id}/pedidos")
 def listar_pedidos_do_cliente(cliente_id: int):
+
     with get_connection() as conn:
+
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM clientes WHERE id = %s", (cliente_id,))
+
+            # Confirma se o cliente existe.
+            cur.execute(
+                "SELECT id FROM clientes WHERE id = %s",
+                (cliente_id,)
+            )
+
             cliente = cur.fetchone()
 
             if not cliente:
-                raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+                raise HTTPException(
+                    status_code=404,
+                    detail="Cliente não encontrado"
+                )
 
             cur.execute("""
                 SELECT
@@ -108,8 +179,11 @@ def listar_pedidos_do_cliente(cliente_id: int):
                     profissional,
                     data_servico,
                     criado_em
+
                 FROM pedidos
+
                 WHERE cliente_id = %s
+
                 ORDER BY id
             """, (cliente_id,))
 
@@ -118,6 +192,7 @@ def listar_pedidos_do_cliente(cliente_id: int):
     pedidos = []
 
     for linha in dados:
+
         pedidos.append({
             "id": linha[0],
             "produto": linha[1],
@@ -130,17 +205,39 @@ def listar_pedidos_do_cliente(cliente_id: int):
     return pedidos
 
 
+# =========================
+# DELETAR SERVIÇO
+# =========================
+# Remove um serviço pelo ID.
+
 @router.delete("/pedidos/{pedido_id}")
 def deletar_pedido(pedido_id: int):
+
     with get_connection() as conn:
+
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM pedidos WHERE id = %s", (pedido_id,))
+
+            cur.execute(
+                "SELECT id FROM pedidos WHERE id = %s",
+                (pedido_id,)
+            )
+
             existe = cur.fetchone()
 
             if not existe:
-                raise HTTPException(status_code=404, detail="Serviço não encontrado")
 
-            cur.execute("DELETE FROM pedidos WHERE id = %s", (pedido_id,))
+                raise HTTPException(
+                    status_code=404,
+                    detail="Serviço não encontrado"
+                )
+
+            cur.execute(
+                "DELETE FROM pedidos WHERE id = %s",
+                (pedido_id,)
+            )
+
             conn.commit()
 
-    return {"mensagem": "Serviço deletado com sucesso"}
+    return {
+        "mensagem": "Serviço deletado com sucesso"
+    }

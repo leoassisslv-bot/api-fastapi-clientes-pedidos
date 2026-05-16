@@ -1,3 +1,7 @@
+/* =========================
+   CONFIGURAÇÕES GERAIS
+========================= */
+
 * {
     box-sizing: border-box;
 }
@@ -9,10 +13,20 @@ body {
     color: #1e293b;
 }
 
+
+/* =========================
+   LAYOUT PRINCIPAL
+========================= */
+
 .app-layout {
     display: flex;
     min-height: 100vh;
 }
+
+
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar {
     width: 240px;
@@ -40,12 +54,18 @@ body {
     text-decoration: none;
     padding: 12px 14px;
     border-radius: 12px;
+    transition: 0.2s ease;
 }
 
 .sidebar a:hover {
     background: #1e293b;
     color: white;
 }
+
+
+/* =========================
+   CONTEÚDO PRINCIPAL
+========================= */
 
 .content {
     margin-left: 240px;
@@ -68,6 +88,11 @@ p {
     margin: 0;
     font-size: 18px;
 }
+
+
+/* =========================
+   DASHBOARD
+========================= */
 
 .dashboard {
     display: grid;
@@ -100,6 +125,11 @@ p {
     color: #4f46e5;
 }
 
+
+/* =========================
+   CARDS E GRIDS
+========================= */
+
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -117,13 +147,20 @@ h2 {
     font-size: 24px;
 }
 
+
+/* =========================
+   FORMULÁRIOS
+========================= */
+
 form {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-input {
+input,
+select {
+    width: 100%;
     padding: 15px;
     border: 1px solid #cbd5e1;
     border-radius: 14px;
@@ -133,11 +170,17 @@ input {
     color: #111827;
 }
 
-input:focus {
+input:focus,
+select:focus {
     border-color: #6366f1;
     background: white;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
+
+
+/* =========================
+   BOTÕES
+========================= */
 
 button {
     padding: 15px;
@@ -148,12 +191,30 @@ button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s ease;
 }
 
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
 }
+
+.btn-excluir {
+    background: #ef4444;
+    padding: 9px 13px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.btn-excluir:hover {
+    background: #dc2626;
+}
+
+
+/* =========================
+   LISTAS DE CLIENTES,
+   SERVIÇOS E AGENDA
+========================= */
 
 ul {
     list-style: none;
@@ -190,22 +251,22 @@ li strong {
     color: #475569;
 }
 
-.btn-excluir {
-    background: #ef4444;
-    padding: 9px 13px;
-    border-radius: 10px;
-    font-size: 14px;
-}
 
-.btn-excluir:hover {
-    background: #dc2626;
-}
+/* =========================
+   RESPONSIVIDADE
+========================= */
+/* Adapta o painel para celulares e tablets. */
 
 @media (max-width: 900px) {
     .sidebar {
         position: static;
         width: 100%;
         height: auto;
+    }
+
+    .sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .app-layout {
@@ -218,6 +279,10 @@ li strong {
         padding: 24px;
     }
 
+    h1 {
+        font-size: 32px;
+    }
+
     .dashboard,
     .grid {
         grid-template-columns: 1fr;
@@ -227,20 +292,8 @@ li strong {
         flex-direction: column;
         align-items: flex-start;
     }
-}
 
-select {
-    width: 100%;
-    padding: 16px;
-    border-radius: 14px;
-    border: 1px solid #d8dce7;
-    background: #f7f9fc;
-    font-size: 16px;
-    margin-bottom: 16px;
-    outline: none;
-}
-
-select:focus {
-    border-color: #6d5dfc;
-    box-shadow: 0 0 0 3px rgba(109, 93, 252, 0.15);
+    .btn-excluir {
+        width: 100%;
+    }
 }

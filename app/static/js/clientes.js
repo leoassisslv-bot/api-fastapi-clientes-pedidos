@@ -8,40 +8,55 @@ const listaServicos = document.getElementById("listaServicos");
 const listaAgenda = document.getElementById("listaAgenda");
 
 async function carregarClientes() {
+
     const resposta = await fetch("/clientes");
     const clientes = await resposta.json();
 
     listaClientes.innerHTML = "";
 
     const selectCliente = document.getElementById("cliente_id");
-    selectCliente.innerHTML = '<option value="">Selecione o cliente</option>';
+
+    if (selectCliente) {
+        selectCliente.innerHTML = `
+            <option value="">Selecione o cliente</option>
+        `;
+    }
 
     document.getElementById("totalClientes").textContent = clientes.length;
 
     clientes.forEach(cliente => {
+
         const item = document.createElement("li");
 
         item.innerHTML = `
             <span>
-                <strong>ID:</strong> ${cliente.id}<br>
-                <strong>Nome:</strong> ${cliente.nome}<br>
-                <strong>Email:</strong> ${cliente.email}<br>
-                <strong>Telefone:</strong> ${cliente.telefone || "Não informado"}
+                <strong>${cliente.nome}</strong><br>
+                ${cliente.email}<br>
+                ${cliente.telefone || "Sem telefone"}
             </span>
 
-            <button class="btn-excluir" onclick="excluirCliente(${cliente.id})">Excluir</button>
+            <button class="btn-excluir"
+                onclick="excluirCliente(${cliente.id})">
+                Excluir
+            </button>
         `;
 
         listaClientes.appendChild(item);
 
-        const option = document.createElement("option");
-        option.value = cliente.id;
-        option.textContent = `${cliente.nome} - ${cliente.telefone || "Sem telefone"}`;
-        selectCliente.appendChild(option);
+        if (selectCliente) {
+
+            const option = document.createElement("option");
+
+            option.value = cliente.id;
+            option.textContent = cliente.nome;
+
+            selectCliente.appendChild(option);
+        }
     });
 }
 
 async function excluirCliente(id) {
+
     await fetch(`/clientes/${id}`, {
         method: "DELETE"
     });
@@ -50,7 +65,8 @@ async function excluirCliente(id) {
     carregarServicos();
 }
 
-formCliente.addEventListener("submit", async function(event) {
+formCliente.addEventListener("submit", async (event) => {
+
     event.preventDefault();
 
     const cliente = {
@@ -68,91 +84,147 @@ formCliente.addEventListener("submit", async function(event) {
     });
 
     formCliente.reset();
+
     carregarClientes();
 });
 
 async function carregarServicos() {
-    const resposta = await fetch("/pedidos");
-    const servicos = await resposta.json();
 
-    listaServicos.innerHTML = "";
+    try {
 
-    if (listaAgenda) {
-        listaAgenda.innerHTML = "";
-    }
+        const resposta = await fetch("/pedidos");
 
-    document.getElementById("totalServicos").textContent = servicos.length;
+        const servicos = await resposta.json();
 
-    const faturamento = servicos.reduce((total, servico) => {
-        return total + Number(servico.valor);
-    }, 0);
+        listaServicos.innerHTML = "";
 
-    document.getElementById("faturamentoTotal").textContent = `R$ ${faturamento.toFixed(2)}`;
+        if (listaAgenda) {
+            listaAgenda.innerHTML = "";
+        }
 
-    servicos.forEach(servico => {
-        const item = document.createElement("li");
+        document.getElementById("totalServicos").textContent = servicos.length;
 
-        const dataFormatada = servico.data_servico
-            ? new Date(servico.data_servico).toLocaleDateString("pt-BR")
-            : "Não informada";
+        const faturamento = servicos.reduce((total, servico) => {
+            return total + Number(servico.valor || 0);
+        }, 0);
 
-        item.innerHTML = `
-            <span>
-                <strong>ID:</strong> ${servico.id}<br>
-                <strong>Cliente:</strong> ${servico.cliente}<br>
-                <strong>Serviço:</strong> ${servico.produto}<br>
-                <strong>Valor:</strong> R$ ${Number(servico.valor).toFixed(2)}<br>
-                <strong>Profissional:</strong> ${servico.profissional || "Não informado"}<br>
-                <strong>Data do serviço:</strong> ${dataFormatada}
-            </span>
+        document.getElementById("faturamentoTotal").textContent =
+            `R$ ${faturamento.toFixed(2)}`;
 
-            <button class="btn-excluir" onclick="excluirServico(${servico.id})">Excluir</button>
-        `;
+        servicos.forEach(servico => {
 
-        listaServicos.appendChild(item);
+            const item = document.createElement("li");
 
-        if (listaAgenda && servico.data_servico) {
-            const itemAgenda = document.createElement("li");
+            const dataFormatada = servico.data_servico
+                ? new Date(servico.data_servico).toLocaleString("pt-BR")
+                : "Não informada";
 
-            itemAgenda.innerHTML = `
+            item.innerHTML = `
                 <span>
-                    <strong>Data:</strong> ${dataFormatada}<br>
-                    <strong>Cliente:</strong> ${servico.cliente}<br>
-                    <strong>Serviço:</strong> ${servico.produto}<br>
-                    <strong>Profissional:</strong> ${servico.profissional || "Não informado"}<br>
-                    <strong>Valor:</strong> R$ ${Number(servico.valor).toFixed(2)}
+                    <strong>${servico.produto}</strong><br>
+
+                    Cliente: ${servico.cliente}<br>
+
+                    Valor: R$ ${Number(servico.valor).toFixed(2)}<br>
+
+                    Profissional:
+                    ${servico.profissional || "Não informado"}<br>
+
+                    Data:
+                    ${dataFormatada}
                 </span>
+
+                <button class="btn-excluir"
+                    onclick="excluirServico(${servico.id})">
+                    Excluir
+                </button>
             `;
 
-            listaAgenda.appendChild(itemAgenda);
-        }
-    });
+            listaServicos.appendChild(item);
+
+            if (listaAgenda && servico.data_servico) {
+
+                const itemAgenda = document.createElement("li");
+
+                itemAgenda.innerHTML = `
+                    <span>
+                        <strong>${dataFormatada}</strong><br>
+
+                        ${servico.cliente}<br>
+
+                        ${servico.produto}<br>
+
+                        ${servico.profissional || "Não informado"}
+                    </span>
+                `;
+
+                listaAgenda.appendChild(itemAgenda);
+            }
+        });
+
+    } catch (erro) {
+
+        console.error("Erro ao carregar serviços:", erro);
+    }
 }
 
-formServico.addEventListener("submit", async function(event) {
+formServico.addEventListener("submit", async (event) => {
+
     event.preventDefault();
 
     const servico = {
-        cliente_id: Number(document.getElementById("cliente_id").value),
+        cliente_id: Number(
+            document.getElementById("cliente_id").value
+        ),
+
         produto: document.getElementById("produto").value,
-        valor: Number(document.getElementById("valor").value),
-        profissional: document.getElementById("profissional").value,
-        data_servico: document.getElementById("data_servico").value
+
+        valor: Number(
+            document.getElementById("valor").value
+        ),
+
+        profissional:
+            document.getElementById("profissional").value,
+
+        data_servico:
+            document.getElementById("data_servico").value
     };
 
-    await fetch("/pedidos", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(servico)
-    });
+    try {
 
-    formServico.reset();
-    carregarServicos();
+        const resposta = await fetch("/pedidos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(servico)
+        });
+
+        if (!resposta.ok) {
+
+            const erro = await resposta.text();
+
+            console.error(erro);
+
+            alert("Erro ao cadastrar serviço");
+
+            return;
+        }
+
+        formServico.reset();
+
+        carregarServicos();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao conectar com servidor");
+    }
 });
 
 async function excluirServico(id) {
+
     await fetch(`/pedidos/${id}`, {
         method: "DELETE"
     });

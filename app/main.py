@@ -48,3 +48,16 @@ def home(request: Request):
         request=request,
         name="index.html"
     )
+
+
+@app.get("/login", response_class=HTMLResponse)
+def login(request: Request):
+    """
+    Rota da tela de login do sistema.
+
+    Renderiza a página de login do NextStudio.
+    """
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html"
+    )

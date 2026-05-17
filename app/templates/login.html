@@ -83,9 +83,25 @@
 
             if (resposta.ok) {
 
-                window.location.href = "/dashboard";
+    const dados = await resposta.json();
 
-            } else {
+    localStorage.setItem("logado", "sim");
+
+    localStorage.setItem(
+        "usuario_id",
+        dados.usuario.id
+    );
+
+    localStorage.setItem(
+        "usuario_nome",
+        dados.usuario.nome_empresa
+    );
+
+    window.location.href = "/dashboard";
+
+}
+
+             else {
 
                 alert("Email ou senha inválidos.");
 

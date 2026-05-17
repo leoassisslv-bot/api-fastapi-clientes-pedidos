@@ -470,3 +470,19 @@ li strong {
     flex-direction: column;
     gap: 18px;
 }
+
+.logout-btn {
+    margin-top: 8px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 10px;
+    background: #ef4444;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}

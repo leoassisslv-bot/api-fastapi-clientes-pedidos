@@ -31,6 +31,34 @@ def criar_tabelas():
         with conn.cursor() as cur:
 
             # =========================
+            # TABELA USUÁRIOS
+            # =========================
+
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS usuarios (
+                    id SERIAL PRIMARY KEY,
+                    nome_empresa VARCHAR(100),
+                    email VARCHAR(100) UNIQUE NOT NULL,
+                    senha VARCHAR(100) NOT NULL,
+                    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+             # =========================
+            # USUÁRIO ADMIN PADRÃO
+            # =========================
+
+            cur.execute("""
+                INSERT INTO usuarios (nome_empresa, email, senha)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (email) DO NOTHING
+            """, (
+                "NextStudio Admin",
+                "admin@nextstudio.com",
+                "123456"
+            ))
+
+            # =========================
             # TABELA CLIENTES
             # =========================
 

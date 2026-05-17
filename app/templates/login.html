@@ -57,19 +57,31 @@
 
     <script>
 
-        const form = document.getElementById("loginForm");
+    const form = document.getElementById("loginForm");
 
-        form.addEventListener("submit", function(event) {
+    form.addEventListener("submit", async function(event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            const email = document.getElementById("email").value;
-            const senha = document.getElementById("senha").value;
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
 
-            if (
-                email === "admin@nextstudio.com" &&
-                senha === "123456"
-            ) {
+        try {
+
+            const resposta = await fetch("/api/login", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    email: email,
+                    senha: senha
+                })
+            });
+
+            if (resposta.ok) {
 
                 window.location.href = "/dashboard";
 
@@ -79,9 +91,15 @@
 
             }
 
-        });
+        } catch (erro) {
 
-    </script>
+            alert("Erro ao conectar com o servidor.");
+
+        }
+
+    });
+
+</script>
 
 </body>
 </html>

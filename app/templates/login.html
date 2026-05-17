@@ -29,16 +29,18 @@
                 agenda e serviços.
             </p>
 
-            <form>
+            <form id="loginForm">
 
                 <input
                     type="email"
+                    id="email"
                     placeholder="Seu email"
                     required
                 >
 
                 <input
                     type="password"
+                    id="senha"
                     placeholder="Sua senha"
                     required
                 >
@@ -52,6 +54,34 @@
         </div>
 
     </div>
+
+    <script>
+
+        const form = document.getElementById("loginForm");
+
+        form.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const senha = document.getElementById("senha").value;
+
+            if (
+                email === "admin@nextstudio.com" &&
+                senha === "123456"
+            ) {
+
+                window.location.href = "/dashboard";
+
+            } else {
+
+                alert("Email ou senha inválidos.");
+
+            }
+
+        });
+
+    </script>
 
 </body>
 </html>

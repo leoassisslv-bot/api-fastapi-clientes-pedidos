@@ -38,26 +38,24 @@ def iniciar_banco():
 
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    """
-    Rota principal do sistema.
-
-    Renderiza a página inicial do painel NextStudio.
-    """
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html"
-    )
-
-
-@app.get("/login", response_class=HTMLResponse)
 def login(request: Request):
     """
-    Rota da tela de login do sistema.
-
-    Renderiza a página de login do NextStudio.
+    Tela inicial de login.
     """
+
     return templates.TemplateResponse(
         request=request,
         name="login.html"
+    )
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard(request: Request):
+    """
+    Painel administrativo do sistema.
+    """
+
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html"
     )

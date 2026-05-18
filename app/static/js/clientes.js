@@ -21,7 +21,9 @@ const listaAgenda = document.getElementById("listaAgenda");
 
 async function carregarClientes() {
 
-    const resposta = await fetch("/clientes");
+    const usuario_id = localStorage.getItem("usuario_id");
+
+    const resposta = await fetch(`/clientes?usuario_id=${usuario_id}`);
     const clientes = await resposta.json();
 
     listaClientes.innerHTML = "";
@@ -93,25 +95,37 @@ formCliente.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
+    const usuario_id = localStorage.getItem("usuario_id");
+
     const cliente = {
+
+        usuario_id: Number(usuario_id),
+
         nome: document.getElementById("nome").value,
+
         email: document.getElementById("email").value,
+
         telefone: document.getElementById("telefone").value
+
     };
 
     await fetch("/clientes", {
+
         method: "POST",
+
         headers: {
             "Content-Type": "application/json"
         },
+
         body: JSON.stringify(cliente)
+
     });
 
     formCliente.reset();
 
     carregarClientes();
-});
 
+});
 
 // =========================
 // CARREGAR SERVIÇOS E AGENDA
@@ -123,7 +137,12 @@ async function carregarServicos() {
 
     try {
 
-        const resposta = await fetch("/pedidos");
+        const usuario_id = localStorage.getItem("usuario_id");
+
+        const resposta = await fetch(
+            `/pedidos?usuario_id=${usuario_id}`
+        );
+
         const servicos = await resposta.json();
 
         listaServicos.innerHTML = "";
@@ -210,7 +229,12 @@ formServico.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
+    const usuario_id = localStorage.getItem("usuario_id");
+
     const servico = {
+
+        usuario_id: Number(usuario_id),
+
         cliente_id: Number(
             document.getElementById("cliente_id").value
         ),
@@ -238,7 +262,6 @@ formServico.addEventListener("submit", async (event) => {
             body: JSON.stringify(servico)
         });
 
-        // Se a API retornar erro, mostra alerta e interrompe o cadastro.
         if (!resposta.ok) {
 
             const erro = await resposta.text();

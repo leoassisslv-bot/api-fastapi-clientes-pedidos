@@ -17,6 +17,7 @@ router = APIRouter()
 
 class ClienteCreate(BaseModel):
 
+    usuario_id: int
     nome: str
     email: str
     telefone: str
@@ -28,7 +29,7 @@ class ClienteCreate(BaseModel):
 # Retorna todos os clientes cadastrados.
 
 @router.get("/clientes")
-def listar_clientes():
+def listar_clientes(usuario_id: int):
 
     with get_connection() as conn:
 
@@ -42,8 +43,11 @@ def listar_clientes():
                     telefone,
                     criado_em
                 FROM clientes
+                WHERE usuario_id = %s
                 ORDER BY id
-            """)
+            """, (
+                usuario_id,
+            ))
 
             dados = cur.fetchall()
 
@@ -60,7 +64,6 @@ def listar_clientes():
         })
 
     return clientes
-
 
 # =========================
 # BUSCAR CLIENTE POR ID
@@ -117,30 +120,32 @@ def criar_cliente(cliente: ClienteCreate):
 
             with conn.cursor() as cur:
 
-                cur.execute("""
-                    INSERT INTO clientes (
-                        nome,
-                        email,
-                        telefone
-                    )
+             cur.execute("""
+    INSERT INTO clientes (
+        usuario_id,
+        nome,
+        email,
+        telefone
+    )
 
-                    VALUES (%s, %s, %s)
+    VALUES (%s, %s, %s, %s)
 
-                    RETURNING
-                        id,
-                        nome,
-                        email,
-                        telefone,
-                        criado_em
-                """, (
-                    cliente.nome,
-                    cliente.email,
-                    cliente.telefone
-                ))
+    RETURNING
+        id,
+        nome,
+        email,
+        telefone,
+        criado_em
+""", (
+    cliente.usuario_id,
+    cliente.nome,
+    cliente.email,
+    cliente.telefone
+))
 
-                novo_cliente = cur.fetchone()
+        novo_cliente = cur.fetchone()
 
-                conn.commit()
+        conn.commit()
 
         return {
             "id": novo_cliente[0],

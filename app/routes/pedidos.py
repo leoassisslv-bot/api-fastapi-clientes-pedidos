@@ -18,17 +18,13 @@ router = APIRouter()
 
 class PedidoCreate(BaseModel):
 
+    usuario_id: int
     cliente_id: int
     produto: str
     valor: float
     profissional: str
     data_servico: str
 
-
-# =========================
-# CRIAR SERVIÇO
-# =========================
-# Cadastra um serviço vinculado a um cliente existente.
 
 @router.post("/pedidos")
 def criar_pedido(pedido: PedidoCreate):
@@ -37,10 +33,15 @@ def criar_pedido(pedido: PedidoCreate):
 
         with conn.cursor() as cur:
 
-            # Verifica se o cliente existe antes de cadastrar o serviço.
             cur.execute(
-                "SELECT id FROM clientes WHERE id = %s",
-                (pedido.cliente_id,)
+                """
+                SELECT id FROM clientes
+                WHERE id = %s AND usuario_id = %s
+                """,
+                (
+                    pedido.cliente_id,
+                    pedido.usuario_id
+                )
             )
 
             cliente = cur.fetchone()
@@ -49,11 +50,12 @@ def criar_pedido(pedido: PedidoCreate):
 
                 raise HTTPException(
                     status_code=404,
-                    detail="Cliente não encontrado"
+                    detail="Cliente não encontrado para este usuário"
                 )
 
             cur.execute("""
                 INSERT INTO pedidos (
+                    usuario_id,
                     cliente_id,
                     produto,
                     valor,
@@ -61,10 +63,11 @@ def criar_pedido(pedido: PedidoCreate):
                     data_servico
                 )
 
-                VALUES (%s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s)
 
                 RETURNING
                     id,
+                    usuario_id,
                     cliente_id,
                     produto,
                     valor,
@@ -72,6 +75,7 @@ def criar_pedido(pedido: PedidoCreate):
                     data_servico,
                     criado_em
             """, (
+                pedido.usuario_id,
                 pedido.cliente_id,
                 pedido.produto,
                 pedido.valor,
@@ -85,12 +89,13 @@ def criar_pedido(pedido: PedidoCreate):
 
     return {
         "id": novo[0],
-        "cliente_id": novo[1],
-        "produto": novo[2],
-        "valor": float(novo[3]),
-        "profissional": novo[4],
-        "data_servico": str(novo[5]),
-        "criado_em": str(novo[6])
+        "usuario_id": novo[1],
+        "cliente_id": novo[2],
+        "produto": novo[3],
+        "valor": float(novo[4]),
+        "profissional": novo[5],
+        "data_servico": str(novo[6]),
+        "criado_em": str(novo[7])
     }
 
 
@@ -101,7 +106,7 @@ def criar_pedido(pedido: PedidoCreate):
 # Essa rota alimenta a lista de serviços e a agenda no frontend.
 
 @router.get("/pedidos")
-def listar_pedidos():
+def listar_pedidos(usuario_id: int):
 
     with get_connection() as conn:
 
@@ -122,8 +127,12 @@ def listar_pedidos():
                 JOIN clientes
                     ON pedidos.cliente_id = clientes.id
 
+                WHERE pedidos.usuario_id = %s
+
                 ORDER BY pedidos.id
-            """)
+            """, (
+                usuario_id,
+            ))
 
             dados = cur.fetchall()
 

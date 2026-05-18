@@ -79,14 +79,15 @@ def criar_tabelas():
 
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS pedidos (
-                    id SERIAL PRIMARY KEY,
-                    cliente_id INTEGER REFERENCES clientes(id),
-                    produto VARCHAR(100),
-                    valor NUMERIC(10,2),
-                    profissional VARCHAR(100),
-                    data_servico TIMESTAMP,
-                    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER REFERENCES usuarios(id),
+                cliente_id INTEGER REFERENCES clientes(id),
+                produto VARCHAR(100),
+                valor NUMERIC(10,2),
+                profissional VARCHAR(100),
+                data_servico TIMESTAMP,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
             """)
 
             # =========================
@@ -118,6 +119,10 @@ def criar_tabelas():
                 ALTER TABLE clientes
                  ADD COLUMN IF NOT EXISTS usuario_id INTEGER REFERENCES usuarios(id)
         """)
+            cur.execute("""
+                ALTER TABLE pedidos
+                 ADD COLUMN IF NOT EXISTS usuario_id INTEGER REFERENCES usuarios(id)
+     """)
 
         conn.commit()
 

@@ -29,12 +29,23 @@ body {
 ========================= */
 
 .sidebar {
-    width: 240px;
-    background: linear-gradient(180deg, #0f172a, #111827);
+    width: 230px;
+    background: linear-gradient(
+        180deg,
+        #0f172a,
+        #111827
+    );
+
     color: white;
-    padding: 30px 22px;
-    position: fixed;
-    height: 100vh;
+
+    padding: 24px 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    border-right: 1px solid rgba(255,255,255,0.05);
+
+    box-shadow: 4px 0 20px rgba(15,23,42,0.15);
 }
 
 .logo {
@@ -43,10 +54,27 @@ body {
     margin-bottom: 35px;
 }
 
-.sidebar nav {
+.sidebar nav a {
+
+    color: #cbd5e1;
+
+    text-decoration: none;
+
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    margin-bottom: 10px;
+
+    transition: 0.2s ease;
+
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-weight: 500;
 }
 
 .sidebar a {
@@ -59,9 +87,12 @@ body {
     align-items: center;
 }
 
-.sidebar a:hover {
-    background: rgba(255,255,255,0.08);
+.sidebar nav a:hover {
+
+    background: rgba(99,102,241,0.15);
+
     color: white;
+
     transform: translateX(4px);
 }
 

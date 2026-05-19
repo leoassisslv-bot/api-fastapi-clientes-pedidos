@@ -43,17 +43,29 @@ async function carregarClientes() {
         const item = document.createElement("li");
 
         item.innerHTML = `
-            <span>
-                <strong>${cliente.nome}</strong><br>
-                ${cliente.email}<br>
-                ${cliente.telefone || "Sem telefone"}
-            </span>
+    <span>
 
-            <button class="btn-excluir"
-                onclick="excluirCliente(${cliente.id})">
-                Excluir
-            </button>
-        `;
+        <strong style="font-size:16px;">
+            👤 ${cliente.nome}
+        </strong><br>
+
+        <small style="color:#64748b;">
+            ✉️ ${cliente.email}
+        </small><br>
+
+        <small style="color:#64748b;">
+            📞 ${cliente.telefone || "Sem telefone"}
+        </small>
+
+    </span>
+
+    <button class="btn-excluir"
+        onclick="excluirCliente(${cliente.id})">
+
+        🗑️
+
+    </button>
+`;
 
         listaClientes.appendChild(item);
 
@@ -170,25 +182,39 @@ async function carregarServicos() {
                 : "Não informada";
 
             item.innerHTML = `
-                <span>
-                    <strong>${servico.produto}</strong><br>
 
-                    Cliente: ${servico.cliente}<br>
+    <span>
 
-                    Valor: R$ ${Number(servico.valor).toFixed(2)}<br>
+        <strong style="font-size:16px;">
+            ✂️ ${servico.produto}
+        </strong><br>
 
-                    Profissional:
-                    ${servico.profissional || "Não informado"}<br>
+        <small style="color:#64748b;">
+            👤 ${servico.cliente}
+        </small><br>
 
-                    Data:
-                    ${dataFormatada}
-                </span>
+        <small style="color:#64748b;">
+            💰 R$ ${Number(servico.valor).toFixed(2)}
+        </small><br>
 
-                <button class="btn-excluir"
-                    onclick="excluirServico(${servico.id})">
-                    Excluir
-                </button>
-            `;
+        <small style="color:#64748b;">
+            👨‍💼 ${servico.profissional || "Não informado"}
+        </small><br>
+
+        <small style="color:#64748b;">
+            📅 ${dataFormatada}
+        </small>
+
+    </span>
+
+    <button class="btn-excluir"
+        onclick="excluirServico(${servico.id})">
+
+        🗑️
+
+    </button>
+
+`;
 
             listaServicos.appendChild(item);
 

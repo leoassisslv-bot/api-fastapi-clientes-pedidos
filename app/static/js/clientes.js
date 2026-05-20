@@ -1,10 +1,5 @@
 console.log("JavaScript carregado com sucesso!");
 
-// =========================
-// ELEMENTOS DO HTML
-// =========================
-// Captura os formulários e listas que serão manipulados pelo JavaScript.
-
 const formCliente = document.getElementById("formCliente");
 const listaClientes = document.getElementById("listaClientes");
 
@@ -12,15 +7,7 @@ const formServico = document.getElementById("formServico");
 const listaServicos = document.getElementById("listaServicos");
 const listaAgenda = document.getElementById("listaAgenda");
 
-
-// =========================
-// CARREGAR CLIENTES
-// =========================
-// Busca os clientes na API e atualiza a lista na tela.
-// Também preenche o select de clientes no cadastro de serviços.
-
 async function carregarClientes() {
-
     const usuario_id = localStorage.getItem("usuario_id");
 
     const resposta = await fetch(`/clientes?usuario_id=${usuario_id}`);
@@ -39,38 +26,32 @@ async function carregarClientes() {
     document.getElementById("totalClientes").textContent = clientes.length;
 
     clientes.forEach(cliente => {
-
         const item = document.createElement("li");
 
         item.innerHTML = `
-    <span>
+            <span>
+                <strong style="font-size:16px;">
+                    👤 ${cliente.nome}
+                </strong><br>
 
-        <strong style="font-size:16px;">
-            👤 ${cliente.nome}
-        </strong><br>
+                <small style="color:#64748b;">
+                    ✉️ ${cliente.email}
+                </small><br>
 
-        <small style="color:#64748b;">
-            ✉️ ${cliente.email}
-        </small><br>
+                <small style="color:#64748b;">
+                    📞 ${cliente.telefone || "Sem telefone"}
+                </small>
+            </span>
 
-        <small style="color:#64748b;">
-            📞 ${cliente.telefone || "Sem telefone"}
-        </small>
-
-    </span>
-
-    <button class="btn-excluir"
-        onclick="excluirCliente(${cliente.id})">
-
-        🗑️
-
-    </button>
-`;
+            <button class="btn-excluir"
+                onclick="excluirCliente(${cliente.id})">
+                🗑️
+            </button>
+        `;
 
         listaClientes.appendChild(item);
 
         if (selectCliente) {
-
             const option = document.createElement("option");
 
             option.value = cliente.id;
@@ -81,14 +62,7 @@ async function carregarClientes() {
     });
 }
 
-
-// =========================
-// EXCLUIR CLIENTE
-// =========================
-// Remove o cliente do banco e recarrega os dados da tela.
-
 async function excluirCliente(id) {
-
     await fetch(`/clientes/${id}`, {
         method: "DELETE"
     });
@@ -97,64 +71,36 @@ async function excluirCliente(id) {
     carregarServicos();
 }
 
-
-// =========================
-// CADASTRAR CLIENTE
-// =========================
-// Envia os dados do formulário para a API.
-
 formCliente.addEventListener("submit", async (event) => {
-
     event.preventDefault();
 
     const usuario_id = localStorage.getItem("usuario_id");
 
     const cliente = {
-
         usuario_id: Number(usuario_id),
-
         nome: document.getElementById("nome").value,
-
         email: document.getElementById("email").value,
-
         telefone: document.getElementById("telefone").value
-
     };
 
     await fetch("/clientes", {
-
         method: "POST",
-
         headers: {
             "Content-Type": "application/json"
         },
-
         body: JSON.stringify(cliente)
-
     });
 
     formCliente.reset();
 
     carregarClientes();
-
 });
 
-// =========================
-// CARREGAR SERVIÇOS E AGENDA
-// =========================
-// Busca os serviços na API, atualiza a lista,
-// recalcula o faturamento e monta a agenda.
-
 async function carregarServicos() {
-
     try {
-
         const usuario_id = localStorage.getItem("usuario_id");
 
-        const resposta = await fetch(
-            `/pedidos?usuario_id=${usuario_id}`
-        );
-
+        const resposta = await fetch(`/pedidos?usuario_id=${usuario_id}`);
         const servicos = await resposta.json();
 
         listaServicos.innerHTML = "";
@@ -163,15 +109,13 @@ async function carregarServicos() {
             listaAgenda.innerHTML = "";
         }
 
-        const historico =
-            document.getElementById("historicoFinanceiro");
+        const historico = document.getElementById("historicoFinanceiro");
 
         if (historico) {
             historico.innerHTML = "";
         }
 
-        document.getElementById("totalServicos").textContent =
-            servicos.length;
+        document.getElementById("totalServicos").textContent = servicos.length;
 
         const faturamento = servicos.reduce((total, servico) => {
             return total + Number(servico.valor || 0);
@@ -184,11 +128,9 @@ async function carregarServicos() {
 
         const faturamentoDia = servicos
             .filter(servico => {
-
                 if (!servico.data_servico) return false;
 
-                const dataServico =
-                    new Date(servico.data_servico);
+                const dataServico = new Date(servico.data_servico);
 
                 return (
                     dataServico.getDate() === hoje.getDate() &&
@@ -200,16 +142,18 @@ async function carregarServicos() {
                 return total + Number(servico.valor || 0);
             }, 0);
 
-        document.getElementById(
-            "totalFinanceiroServicos"
-        ).textContent =
-            `${servicos.length} serviços`;
+        const totalFinanceiroServicos =
+            document.getElementById("totalFinanceiroServicos");
+
+        if (totalFinanceiroServicos) {
+            totalFinanceiroServicos.textContent =
+                `${servicos.length} serviços`;
+        }
 
         const financeiroCards =
             document.querySelectorAll("#financeiro small");
 
         if (financeiroCards.length >= 2) {
-
             financeiroCards[0].textContent =
                 `R$ ${faturamentoDia.toFixed(2)}`;
 
@@ -218,18 +162,14 @@ async function carregarServicos() {
         }
 
         servicos.forEach(servico => {
-
             const item = document.createElement("li");
 
             const dataFormatada = servico.data_servico
-                ? new Date(servico.data_servico)
-                    .toLocaleString("pt-BR")
+                ? new Date(servico.data_servico).toLocaleString("pt-BR")
                 : "Não informada";
 
             item.innerHTML = `
-
                 <span>
-
                     <strong style="font-size:16px;">
                         ✂️ ${servico.produto}
                     </strong><br>
@@ -249,28 +189,21 @@ async function carregarServicos() {
                     <small style="color:#64748b;">
                         📅 ${dataFormatada}
                     </small>
-
                 </span>
 
                 <button class="btn-excluir"
                     onclick="excluirServico(${servico.id})">
-
                     🗑️
-
                 </button>
             `;
 
             listaServicos.appendChild(item);
 
             if (historico) {
-
-                const itemHistorico =
-                    document.createElement("li");
+                const itemHistorico = document.createElement("li");
 
                 itemHistorico.innerHTML = `
-
                     <span>
-
                         <strong>
                             💰 R$ ${Number(servico.valor).toFixed(2)}
                         </strong><br>
@@ -282,7 +215,6 @@ async function carregarServicos() {
                         <small style="color:#64748b;">
                             👤 ${servico.cliente}
                         </small>
-
                     </span>
                 `;
 
@@ -290,24 +222,14 @@ async function carregarServicos() {
             }
 
             if (listaAgenda && servico.data_servico) {
-
-                const itemAgenda =
-                    document.createElement("li");
+                const itemAgenda = document.createElement("li");
 
                 itemAgenda.innerHTML = `
-
                     <span>
-
-                        <strong>
-                            ${dataFormatada}
-                        </strong><br>
-
+                        <strong>${dataFormatada}</strong><br>
                         ${servico.cliente}<br>
-
                         ${servico.produto}<br>
-
                         ${servico.profissional || "Não informado"}
-
                     </span>
                 `;
 
@@ -316,56 +238,16 @@ async function carregarServicos() {
         });
 
     } catch (erro) {
-
-        console.error(
-            "Erro ao carregar serviços:",
-            erro
-        );
+        console.error("Erro ao carregar serviços:", erro);
     }
 }
 
-            if (historico) {
-
-    const itemHistorico =
-        document.createElement("li");
-
-    itemHistorico.innerHTML = `
-
-        <span>
-
-            <strong>
-                💰 R$ ${Number(servico.valor).toFixed(2)}
-            </strong><br>
-
-            <small style="color:#64748b;">
-                ${servico.produto}
-            </small><br>
-
-            <small style="color:#64748b;">
-                👤 ${servico.cliente}
-            </small>
-
-        </span>
-
-    `;
-
-    historico.appendChild(itemHistorico);
-}
-
-
-// =========================
-// CADASTRAR SERVIÇO
-// =========================
-// Envia o serviço para a API FastAPI.
-
 formServico.addEventListener("submit", async (event) => {
-
     event.preventDefault();
 
     const usuario_id = localStorage.getItem("usuario_id");
 
     const servico = {
-
         usuario_id: Number(usuario_id),
 
         cliente_id: Number(
@@ -386,7 +268,6 @@ formServico.addEventListener("submit", async (event) => {
     };
 
     try {
-
         const resposta = await fetch("/pedidos", {
             method: "POST",
             headers: {
@@ -396,7 +277,6 @@ formServico.addEventListener("submit", async (event) => {
         });
 
         if (!resposta.ok) {
-
             const erro = await resposta.text();
 
             console.error(erro);
@@ -411,33 +291,19 @@ formServico.addEventListener("submit", async (event) => {
         carregarServicos();
 
     } catch (erro) {
-
         console.error(erro);
 
         alert("Erro ao conectar com servidor");
     }
 });
 
-
-// =========================
-// EXCLUIR SERVIÇO
-// =========================
-// Remove o serviço e atualiza a lista e agenda.
-
 async function excluirServico(id) {
-
     await fetch(`/pedidos/${id}`, {
         method: "DELETE"
     });
 
     carregarServicos();
 }
-
-
-// =========================
-// INICIALIZAÇÃO DO SISTEMA
-// =========================
-// Carrega os dados automaticamente ao abrir o painel.
 
 carregarClientes();
 carregarServicos();

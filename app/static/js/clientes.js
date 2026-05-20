@@ -163,7 +163,15 @@ async function carregarServicos() {
             listaAgenda.innerHTML = "";
         }
 
-        document.getElementById("totalServicos").textContent = servicos.length;
+        const historico =
+            document.getElementById("historicoFinanceiro");
+
+        if (historico) {
+            historico.innerHTML = "";
+        }
+
+        document.getElementById("totalServicos").textContent =
+            servicos.length;
 
         const faturamento = servicos.reduce((total, servico) => {
             return total + Number(servico.valor || 0);
@@ -172,90 +180,149 @@ async function carregarServicos() {
         document.getElementById("faturamentoTotal").textContent =
             `R$ ${faturamento.toFixed(2)}`;
 
-            const hoje = new Date();
+        const hoje = new Date();
 
-const faturamentoDia = servicos
-    .filter(servico => {
+        const faturamentoDia = servicos
+            .filter(servico => {
 
-        if (!servico.data_servico) return false;
+                if (!servico.data_servico) return false;
 
-        const dataServico = new Date(servico.data_servico);
+                const dataServico =
+                    new Date(servico.data_servico);
 
-        return (
-            dataServico.getDate() === hoje.getDate() &&
-            dataServico.getMonth() === hoje.getMonth() &&
-            dataServico.getFullYear() === hoje.getFullYear()
-        );
-    })
-    .reduce((total, servico) => {
-        return total + Number(servico.valor || 0);
-    }, 0);
+                return (
+                    dataServico.getDate() === hoje.getDate() &&
+                    dataServico.getMonth() === hoje.getMonth() &&
+                    dataServico.getFullYear() === hoje.getFullYear()
+                );
+            })
+            .reduce((total, servico) => {
+                return total + Number(servico.valor || 0);
+            }, 0);
 
-document.getElementById(
-    "totalFinanceiroServicos"
-).textContent =
-    `${servicos.length} serviços`;
+        document.getElementById(
+            "totalFinanceiroServicos"
+        ).textContent =
+            `${servicos.length} serviços`;
 
-const financeiroCards =
-    document.querySelectorAll("#financeiro small");
+        const financeiroCards =
+            document.querySelectorAll("#financeiro small");
 
-if (financeiroCards.length >= 2) {
+        if (financeiroCards.length >= 2) {
 
-    financeiroCards[0].textContent =
-        `R$ ${faturamentoDia.toFixed(2)}`;
+            financeiroCards[0].textContent =
+                `R$ ${faturamentoDia.toFixed(2)}`;
 
-    financeiroCards[1].textContent =
-        `R$ ${faturamento.toFixed(2)}`;
-}
+            financeiroCards[1].textContent =
+                `R$ ${faturamento.toFixed(2)}`;
+        }
 
         servicos.forEach(servico => {
-               
-            const historico =
-        document.getElementById("historicoFinanceiro");
 
             const item = document.createElement("li");
 
-            // Formata a data recebida do backend para o padrão brasileiro.
             const dataFormatada = servico.data_servico
-                ? new Date(servico.data_servico).toLocaleString("pt-BR")
+                ? new Date(servico.data_servico)
+                    .toLocaleString("pt-BR")
                 : "Não informada";
 
             item.innerHTML = `
 
-    <span>
+                <span>
 
-        <strong style="font-size:16px;">
-            ✂️ ${servico.produto}
-        </strong><br>
+                    <strong style="font-size:16px;">
+                        ✂️ ${servico.produto}
+                    </strong><br>
 
-        <small style="color:#64748b;">
-            👤 ${servico.cliente}
-        </small><br>
+                    <small style="color:#64748b;">
+                        👤 ${servico.cliente}
+                    </small><br>
 
-        <small style="color:#64748b;">
-            💰 R$ ${Number(servico.valor).toFixed(2)}
-        </small><br>
+                    <small style="color:#64748b;">
+                        💰 R$ ${Number(servico.valor).toFixed(2)}
+                    </small><br>
 
-        <small style="color:#64748b;">
-            👨‍💼 ${servico.profissional || "Não informado"}
-        </small><br>
+                    <small style="color:#64748b;">
+                        👨‍💼 ${servico.profissional || "Não informado"}
+                    </small><br>
 
-        <small style="color:#64748b;">
-            📅 ${dataFormatada}
-        </small>
+                    <small style="color:#64748b;">
+                        📅 ${dataFormatada}
+                    </small>
 
-    </span>
+                </span>
 
-    <button class="btn-excluir"
-        onclick="excluirServico(${servico.id})">
+                <button class="btn-excluir"
+                    onclick="excluirServico(${servico.id})">
 
-        🗑️
+                    🗑️
 
-    </button>
-
-`;
+                </button>
+            `;
 
             listaServicos.appendChild(item);
+
+            if (historico) {
+
+                const itemHistorico =
+                    document.createElement("li");
+
+                itemHistorico.innerHTML = `
+
+                    <span>
+
+                        <strong>
+                            💰 R$ ${Number(servico.valor).toFixed(2)}
+                        </strong><br>
+
+                        <small style="color:#64748b;">
+                            ${servico.produto}
+                        </small><br>
+
+                        <small style="color:#64748b;">
+                            👤 ${servico.cliente}
+                        </small>
+
+                    </span>
+                `;
+
+                historico.appendChild(itemHistorico);
+            }
+
+            if (listaAgenda && servico.data_servico) {
+
+                const itemAgenda =
+                    document.createElement("li");
+
+                itemAgenda.innerHTML = `
+
+                    <span>
+
+                        <strong>
+                            ${dataFormatada}
+                        </strong><br>
+
+                        ${servico.cliente}<br>
+
+                        ${servico.produto}<br>
+
+                        ${servico.profissional || "Não informado"}
+
+                    </span>
+                `;
+
+                listaAgenda.appendChild(itemAgenda);
+            }
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar serviços:",
+            erro
+        );
+    }
+}
 
             if (historico) {
 
@@ -283,33 +350,6 @@ if (financeiroCards.length >= 2) {
     `;
 
     historico.appendChild(itemHistorico);
-}
-
-            // A agenda usa os mesmos serviços, mas exibe apenas os que possuem data.
-            if (listaAgenda && servico.data_servico) {
-
-                const itemAgenda = document.createElement("li");
-
-                itemAgenda.innerHTML = `
-                    <span>
-                        <strong>${dataFormatada}</strong><br>
-
-                        ${servico.cliente}<br>
-
-                        ${servico.produto}<br>
-
-                        ${servico.profissional || "Não informado"}
-                    </span>
-                `;
-
-                listaAgenda.appendChild(itemAgenda);
-            }
-        });
-
-    } catch (erro) {
-
-        console.error("Erro ao carregar serviços:", erro);
-    }
 }
 
 

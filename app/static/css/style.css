@@ -77,16 +77,6 @@ body {
     font-weight: 500;
 }
 
-.sidebar a {
-    color: #cbd5e1;
-    text-decoration: none;
-    padding: 12px 14px;
-    border-radius: 12px;
-    transition: 0.25s ease;
-    display: flex;
-    align-items: center;
-}
-
 .sidebar nav a:hover {
 
     background: rgba(99,102,241,0.15);
@@ -215,6 +205,7 @@ p {
     margin: 0;
     font-size: 32px;
     color: #4f46e5;
+    white-space: nowrap;
 }
 
 .icone-card {
@@ -430,6 +421,7 @@ li strong {
     button {
         width: 100%;
         font-size: 16px;
+        box-sizing: border-box;
     }
 
     li {

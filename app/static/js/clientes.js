@@ -172,7 +172,46 @@ async function carregarServicos() {
         document.getElementById("faturamentoTotal").textContent =
             `R$ ${faturamento.toFixed(2)}`;
 
+            const hoje = new Date();
+
+const faturamentoDia = servicos
+    .filter(servico => {
+
+        if (!servico.data_servico) return false;
+
+        const dataServico = new Date(servico.data_servico);
+
+        return (
+            dataServico.getDate() === hoje.getDate() &&
+            dataServico.getMonth() === hoje.getMonth() &&
+            dataServico.getFullYear() === hoje.getFullYear()
+        );
+    })
+    .reduce((total, servico) => {
+        return total + Number(servico.valor || 0);
+    }, 0);
+
+document.getElementById(
+    "totalFinanceiroServicos"
+).textContent =
+    `${servicos.length} serviços`;
+
+const financeiroCards =
+    document.querySelectorAll("#financeiro small");
+
+if (financeiroCards.length >= 2) {
+
+    financeiroCards[0].textContent =
+        `R$ ${faturamentoDia.toFixed(2)}`;
+
+    financeiroCards[1].textContent =
+        `R$ ${faturamento.toFixed(2)}`;
+}
+
         servicos.forEach(servico => {
+               
+            const historico =
+        document.getElementById("historicoFinanceiro");
 
             const item = document.createElement("li");
 
@@ -217,6 +256,34 @@ async function carregarServicos() {
 `;
 
             listaServicos.appendChild(item);
+
+            if (historico) {
+
+    const itemHistorico =
+        document.createElement("li");
+
+    itemHistorico.innerHTML = `
+
+        <span>
+
+            <strong>
+                💰 R$ ${Number(servico.valor).toFixed(2)}
+            </strong><br>
+
+            <small style="color:#64748b;">
+                ${servico.produto}
+            </small><br>
+
+            <small style="color:#64748b;">
+                👤 ${servico.cliente}
+            </small>
+
+        </span>
+
+    `;
+
+    historico.appendChild(itemHistorico);
+}
 
             // A agenda usa os mesmos serviços, mas exibe apenas os que possuem data.
             if (listaAgenda && servico.data_servico) {
